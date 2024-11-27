@@ -1,4 +1,109 @@
 use Northwind
+--==================================================================
+-- Begining of 1-0 select
+--==================================================================
+
+-- select */distinct
+-- from {table}
+--where <condition>
+
+-- ZADANIA
+
+-- Wybierz nazwy i adresy wszystkich klientów:
+select CompanyName, Address 
+from Customers
+
+-- Wybierz nazwiska i numery telefonów pracowników
+select LastName, HomePhone
+from Employees
+
+-- Wybierz nazwy i adresy wszystkich klientów mających siedziby w Londynie
+select CompanyName, City
+from Customers
+where City = 'London'
+
+-- Wybierz nazwy i adresy wszystkich klientów mających siedziby we Francji lub w
+-- Hiszpanii
+select CompanyName, Country
+from Customers
+where country = 'France' or country = 'Spain'
+
+-- Wybierz nazwy i ceny produktów o cenie jednostkowej pomiędzy 20.00 a 30.00
+select ProductName, UnitPrice
+from Products
+where UnitPrice >= '20.00' and UnitPrice <= '30.00'
+
+--  Wybierz nazwy i ceny produktów z kategorii 'Meat/Poultry'
+select ProductName, UnitPrice
+from Products
+where CategoryID = '6'
+
+
+-- LIKE --
+
+-- LIKE  ‘BR%' napisy zaczynające się od BR
+-- LIKE  'Br%' napisy zaczynające się od Br
+-- LIKE  ‘%een' napisy kończące się na een
+-- LIKE  '%en%' napisy mające w środku en
+-- LIKE  '_en' pierwsza litera dowolna a następnie en
+-- LIKE  '[CK]%' pierwsza litera C lub K
+-- LIKE  '[S-V]%' pierwsza litera S do V
+-- LIKE  'M[^c]%' pierwsza litera M druga litera różna od c
+
+--  Szukamy informacji o produktach sprzedawanych w butelkach (‘bottleʼ)
+select ProductName, QuantityPerUnit
+from Products
+where QuantityPerUnit like '%bottle%'
+
+-- Wyszukaj informacje o stanowisku pracowników, których nazwiska zaczynają się na
+-- literę z zakresu od B do L
+select Title, LastName, FirstName
+from Employees
+where LastName like '[B-L]%'
+
+-- OPERATORY --
+
+--Wybierz zamówienia złożone w latach: 1997 do 1998
+select OrderID, OrderDate
+from Orders
+where OrderDate between '01.01.1997' and '01.01.1998'
+
+-- ORDER BY --
+
+select CompanyName, Country
+from Customers
+order by Country
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--==================================================================
+-- End of 1-0 select
+--==================================================================
+
 -- Ogranicznie zbioru wynikow;)
 
 select top 5 with ties orderid, productid, quantity
