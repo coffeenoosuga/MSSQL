@@ -74,35 +74,87 @@ select CompanyName, Country
 from Customers
 order by Country
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 --==================================================================
 -- End of 1-0 select
 --==================================================================
+
+--==================================================================
+-- Begining of 2-0
+--==================================================================
+-- TOP --
+
+-- COUNT  liczba wierszy --
+-- COUNT (*) same --
+-- MIN  wartość minimalna --
+-- MAX wartość maksymalna --
+-- SUM suma --
+-- AVG wartosć średnia --
+-- GROUP BY --
+-- GROUP BU CUBE --
+-- -||- SETS --
+
+-- HAVING --
+-- ROLLUP --
+
+
+--==================================================================
+-- End of 2-0
+--==================================================================
+
+--==================================================================
+-- Begining of 3-0
+--==================================================================
+
+-- JOIN --
+
+-- Napisz polecenie zwracające nazwy produktów i firmy je dostarczające
+-- tak aby produkty bez dostawców i dostawcy bez produktów nie pojawiali się
+select p.ProductName, s.CompanyName
+from Products as p
+inner join Suppliers as s
+on p.SupplierID = s.SupplierID
+
+-- OUTER JOIN --
+
+--Napisz polecenie zwracające wszystkich klientów z datami zamówień\
+select c.CompanyName, c.CustomerID, o.OrderDate
+from Customers as c
+left outer join Orders as o
+on o.CustomerID = c.CustomerID 
+
+-- Wybierz nazwy i numery telefonów dostawców, dostarczających produkty, których
+-- aktualnie nie  ma w magazynie
+select s.CompanyName, s.Phone, p.ProductID
+from Suppliers as s
+join Products as p
+on p.SupplierID = s.SupplierID
+where p.UnitsInStock = 0
+
+-- Dla każdego klienta podaj liczbę złożonych przez niego zamówień. Zbiór wynikowy
+-- powinien zawierać nazwę klienta, oraz liczbę zamówień
+select c.CompanyName, c.CustomerID, count(o.OrderID) as Orders
+from Customers as c
+join Orders as o
+on o.CustomerID = c.CustomerID
+join [Order Details] as od
+on od.OrderID = o.OrderID
+group by c.CompanyName, c.CustomerID
+order by count(o.OrderID) desc
+
+
+-- Union suma zbiorow
+-- Intersect cesc wspolna 
+-- Except roznica
+--==================================================================
+-- End of 3-0
+--==================================================================
+
+
+
+--========================================================================================================================
+-- IDK what's down there, just let it be
+--========================================================================================================================
+
 
 -- Ogranicznie zbioru wynikow;)
 
