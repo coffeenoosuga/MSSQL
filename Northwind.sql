@@ -141,14 +141,155 @@ on od.OrderID = o.OrderID
 group by c.CompanyName, c.CustomerID
 order by count(o.OrderID) desc
 
+-- Wybierz nazwy i ceny produktów (baza northwind) o cenie jednostkowej pomiędzy 20.00 a 30.00, 
+-- dla każdego produktu podaj dane adresowe dostawcy, interesują nas tylko produkty z kategorii ‘Meat/Poultry’
+use Northwind
+
+select distinct p.UnitPrice, o.ShipAddress, p.ProductName
+from Products as p
+inner join [Order Details] as od 
+on od.UnitPrice = p.UnitPrice and od.UnitPrice >= 20 and p.UnitPrice <= 30 and p.CategoryID = '6'
+join Orders as o
+on o.OrderID = od.OrderID
+inner join Categories as c
+on c.CategoryID = p.CategoryID
+-- IDK
+
+-- Wybierz nazwy i ceny produktów z kategorii ‘Confections’ dla każdego produktu podaj nazwę dostawcy.
+select p.ProductName, p.UnitPrice, c.CategoryName
+from Products as p
+inner join Categories as c
+on p.CategoryID = c.CategoryID and CategoryName = 'Confections'
+
+
+
+-- Dla każdego klienta podaj liczbę złożonych przez niego zamówień w marcu 1997r
+select c.CompanyName, count(o.OrderID) as num
+from Customers as c
+left join Orders as o
+on o.CustomerID = c.CustomerID and year(o.OrderDate) = 1997 and month(o.OrderDate) = 3
+group by c.CompanyName, c.CustomerID
+order by count(o.OrderID) desc
+
+
+-- Wybierz nazwy i numery telefonów klientów, którzy kupowali produkty  z kategorii ‘Confections’
+select c.CompanyName, c.Phone
+from Customers c
+join Orders o
+on o.CustomerID = c.CustomerID 
+join [Order Details] od
+on od.OrderID = o.OrderID 
+join Products p
+on p.ProductID = od.ProductID
+join Categories k
+on k.CategoryName = p.CategoryID and k.CategoryName = 'Confections'
+group by k.CategoryID, c.CompanyName, c.Phone
+
+-- Wybierz nazwy i numery telefonów klientów, którzy kupowali produkty  z kategorii ‘Confections’
+
+select distinct c.CompanyName, c.Phone
+from Customers as c
+join Orders as o 
+on c.CustomerID = o.CustomerID
+join [Order Details] as od 
+on o.OrderID = od.OrderID
+join Products as p 
+on od.ProductID = p.ProductID
+join Categories as ca 
+on p.CategoryID = ca.CategoryID
+where ca.CategoryName ='Confections'
+
+--select distinct c.CompanyName, c.Phone
+--from Customers as c
+--where c.CustomersID not in{
+--    select distinct o.CustomerID
+--    from Orders o
+--    inner join [Order Details] od 
+--    on od.OrderID = o.OrderID
+--    inner join Products p 
+--    on p.ProductID = od.ProductID
+--    inner join Categories cat 
+--    on cat.CategoryID = p.CategoryID
+--    where cat.CategoryName = 'Confesions'    
+--}
+
+
 
 -- Union suma zbiorow
+select  firstname + ' ' + lastname as name,city, postalcode  
+from employees  
+union  
+select companyname, city, postalcode 
+from customers
+
+select 'a'
+union all 
+select 'a'
+
 -- Intersect cesc wspolna 
+
+-- państwa z których mamy zarówno klientów jak i dostawców
+select country from customers  
+intersect  
+select country from suppliers
+
 -- Except roznica
+select customerid from orders where year(orderdate) = 1997  
+except  
+select customerid from orders where year(orderdate) = 1996
 --==================================================================
 -- End of 3-0
 --==================================================================
 
+
+--==================================================================
+-- Begining of 3-1
+--==================================================================
+
+-- додому до хати
+
+--==================================================================
+-- End of 3-1
+--==================================================================
+
+--==================================================================
+-- Begining of 4-0
+--==================================================================
+
+-- W  miejscu w którym możemy użyć nazwy tabeli, możemy użyć podzapytania
+select t.orderid, t.customerid  
+ from (select orderid, customerid  
+         from orders) as t
+
+-- Zwraca tylko 1 linieke
+select productname, unitprice  
+     , (select avg(unitprice) from products) as average 
+     , UnitPrice - (select avg(unitprice) from products) as diff
+from products
+where UnitPrice > (select avg(unitprice) from products)
+
+
+select productname, UnitPrice, CategoryID
+    ,(select avg(UnitPrice)
+    from products as p_in
+    where p_in.CategoryID = p_in.CategoryID) as average
+    , UnitPrice - (select avg(UnitPrice)
+    from products as p_in
+    where p_in.CategoryID = p_in.CategoryID) as diff
+from Products p_out
+where UnitPrice > (select avg(UnitPrice)
+)
+
+
+
+-- перевірка за допомоги except
+
+
+
+
+--==================================================================
+-- End of 4-0
+--==================================================================
 
 
 --========================================================================================================================
@@ -279,3 +420,6 @@ left join orders
      and YEAR(orderdate) = 1997 and month (orderdate) = 2
 group by FirstName, LastName, Employees.EmployeeID
 --zrobic w domu
+
+
+
